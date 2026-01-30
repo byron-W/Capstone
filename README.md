@@ -1,2 +1,5 @@
-# Capstone
-Capstone for Computational Data Science major at GMU
+# Capstone for Computational Data Science
+## Abstract
+<p>
+Internet users often blame bad weather for slow connections, but is this assumption supported by data? This study challenges the prevailing narrative by examining whether meteorological conditions actually predict download speeds in Northern Virginia. While existing research documents theoretical mechanisms for atmospheric signal interference and controlled laboratory effects on wireless communications at 2.4 GHz, the gap between laboratory signal measurements and real-world internet performance remains largely unexplored. Using multiple linear regression models and other statistical analyses, this study tested whether temperature, precipitation, humidity, wind speed, and visibility could predict download speeds from over 20,000 hourly observations. Weather variables explained only 0.9% of download speed variation ($R^2 = 0.009$), and even extreme weather conditions showed negligible practical effects with Cohen's $d < 0.12$ and $\eta^2 = 0.0045$. The combined linear regression model incorporating both weather and time factors achieved just 1.5% explained variance, demonstrating that 98.5% of download speed variation stems from other sources. These findings reveal that infrastructure quality and network congestion, not local weather, drive internet performance, a distinction with significant implications for broadband policy and resource investment priorities.
+</p>
