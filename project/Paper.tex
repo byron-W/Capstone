@@ -1,0 +1,760 @@
+%%
+%% GMU LaTeX PhD Dissertation Format Template
+%%
+%% Developed by:
+%%      Daniel O. Awduche and Christopher A. St. Jean
+%%      Communications and Networking Lab
+%%      Dept. of Electrical and Computer Engineering
+%%
+%% Usage note are in this file
+%% 
+%% 04/27/2023 Tammy Stitz Changed to use the same sty file for theses and dissertations
+%% 07/22/2023 Fixed vertical spacing between the text and figures/tables
+%% 01/07/2024 Kent Miller Modified for Capstone
+%%
+%%**********************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either
+%% expressed or implied; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE!
+%% User assumes all risk.
+%% In no event shall any contributor to this code be liable for any damages
+%% or losses, including, but not limited to, incidental, consequential, or
+%% any other damages, resulting from the use or misuse of any information
+%% contained here.
+%%**********************************************************************
+%%
+%% $Id: GMU_template.tex,v 1.87 2023/05/10 $
+%%
+\documentclass[11pt]{report}
+
+%Must be at least 3 lines between the text and the floats TS - 2023
+\renewcommand{\textfloatsep}{33pt}
+\renewcommand{\floatsep}{33pt}
+\renewcommand{\intextsep}{33pt}
+
+%%  The file gmuETD.sty is the GMU latex package to typeset a GMU thesis or dissertation
+%%  It should be placed in the same directory as your LaTeX files
+\usepackage{gmuETD}
+
+%%
+%% other packages that need to be loaded
+%%
+\usepackage{graphicx}                    %   for imported graphics
+\usepackage{amsmath}                     %%
+\usepackage{amsfonts}                    %%  for AMS mathematics
+\usepackage{amssymb}                     %%
+\usepackage{amsthm}                      %%
+\usepackage[normalem]{ulem}              %   a nice standard underline package
+\usepackage[noadjust,verbose,sort]{cite} %   arranges reference citations neatly
+\usepackage{setspace}                    %   for line spacing commands
+\usepackage{siunitx}                     %   for numbers with SI units
+\usepackage{textcomp}
+\usepackage{float, url}
+\usepackage{boxedminipage,verbatim,lineno}
+
+\beforedoc
+
+\begin{document}
+
+%% In this section, all of the user-specific fields to be used in the
+%% title pages are set
+%% Note: Title must be in title case to look correct for the title page
+%%       (e.g., important words are capitalized)
+\title{Weather and Internet Connectivity\\
+            A Statistical Analysis of Download Speed Predictors in Northern Virginia}
+\onelinetitle{Weather and Internet Connectivity: A Statistical Analysis of Download Speed Predictors in Northern Virginia}
+\author{Byron Washington}
+\credential{BS}
+\degree{Bachelor of Science}
+\doctype{Capstone Project}
+\dept{Computational and Data Science Department}
+\discipline{Computational and Data Science}
+
+\firstdeg{Bachelor of Science}
+\firstdegschool{George Mason University}
+\firstdegyear{2026}
+
+\degreeyear{2026}
+
+% Note: semester name should be written as Fall Semester, Spring Semester, or Summer Semester.
+\degreesemester{Spring Semester}
+
+%Enter all information that will appear below the signature line
+% (e.g., Dr. Dimitrios Ioannou, Advisor) Need a second line? use \addsigline
+% (e.g., Dr. Firstname Dean, Dean \addsigline of Some School)
+% The advisor's name is used in two places. \advisorsignline is on the signature line only.
+% This is needed for the label and if a second line needs added for the signature line
+\advisorname{Dr. Kent Miller}
+\makeatletter
+\advisorsignline{\@advisorname, \@doctype\ Director}
+\makeatother
+           
+\firstmember{Dr. First Last, Committee Member}
+\secondmember{Dr. First Last, Committee Member}
+\depthead{Dr. Arie Croitoru, Department Head}
+%\dean{Dr. First Last, Dean}
+
+%%
+%% Introductory pages
+%%
+
+% Note: The signature sheet is set according to the requirements of the Volgenau School of
+% Information Technology and Engineering. If your college/school requirement is different,
+% please make appropriate changes in the "signaturepage" section of gmudissertation.sty file.
+\signaturepage
+
+\titlepage
+
+% copyright technically optional but should be included in to avoid potential pagination problems
+\copyrightpage
+
+%%
+%% Dedication page
+%%
+
+\dedicationpage
+
+\noindent I dedicate this capstone to my family.
+
+%%
+%% Acknowledgements
+%%
+
+\acknowledgementspage
+
+\noindent I would like to thank the following people who made this possible, my family and colleagues at George Mason University.
+
+%%
+%% Table of contents, list of tables, and lists of figures
+%%
+
+\tableofcontents
+
+\listoftables
+
+\listoffigures
+
+%%
+%% Abstract
+%%
+\abstractpage
+
+Internet users often blame bad weather for slow connections, but is this assumption supported by data? This study challenges the prevailing narrative by examining whether meteorological conditions actually predict download speeds in Northern Virginia. While existing research documents theoretical mechanisms for atmospheric signal interference and controlled laboratory effects on wireless communications at 2.4 GHz, the gap between laboratory signal measurements and real-world internet performance remains largely unexplored. Using multiple linear regression models and other statistical analyses, this study tested whether temperature, precipitation, humidity, wind speed, and visibility could predict download speeds from over 20,000 hourly observations. Weather variables explained only 0.9\% of download speed variation ($R^2 = 0.009$), and even extreme weather conditions showed negligible practical effects with Cohen's $d < 0.12$ and $\eta^2 = 0.0045$. The combined linear regression model incorporating both weather and time factors achieved just 1.5\% explained variance, demonstrating that 98.5\% of download speed variation stems from other sources. These findings reveal that infrastructure quality and network congestion, not local weather, drive internet performance, a distinction with significant implications for broadband policy and resource investment priorities.
+
+%%
+%%  the main body of the dissertation
+%%
+\startofchapters
+
+%% include the chapter files
+\chapter{Introduction}
+
+Wireless internet connectivity has become essential infrastructure for rural communities, yet performance issues remain a persistent challenge. When download speeds drop or connections fail, weather conditions are frequently cited as the culprit. Heavy precipitation, temperature extremes, and high winds are commonly blamed for poor internet performance, with the assumption that atmospheric interference degrades signal quality as wireless signals travel through the air to reach devices\cite{allconnect_weather_internet}.
+
+While it makes sense that a thunderstorm overhead would slow your internet, this assumption has rarely been tested with real-world data. While weather can theoretically affect wireless signal propagation, the practical significance of these effects compared to other factors remains unclear. Network congestion, infrastructure limitations, and usage patterns may play far more substantial roles in determining internet performance, particularly in rural areas where wired internet infrastructure remains scarce~\cite{changelabsolutions2024broadband}.
+
+This study challenges conventional wisdom by examining whether meteorological conditions are actually meaningful predictors of internet performance. Using hourly download speed measurements paired with comprehensive weather data from the Northern Virginia region, we test whether temperature, precipitation, humidity, wind speed, and visibility significantly affect connectivity in practice. In other words, I will test if the relationship between weather and internet performance is weaker than commonly believed.
+
+Research Question: How do different weather conditions affect wireless internet performance in Northern Virginia, and is weather actually a significant predictor of connectivity issues?
+
+\chapter{Prior Research}
+
+\section{Wireless Signal Propagation: Theoretical Framework}
+
+From being used to make torpedoes more accurate in WWII to now being used to look up memes, WiFi has been one of the most impactful inventions for the human race in the past 25 years~\cite{wifinowglobal_wifi_invention}. The physics behind WiFi suggests these systems should be vulnerable to weather changes, but whether these theoretical vulnerabilities translate to measurable real-world effects remains an open question. According to Tse and Viswanath, wireless communication faces two big challenges that wired systems don't deal with: fading and interference~\cite{tse2005fundamentals}.
+
+Cell phone networks in the US operate on specific frequency bands around 0.9 GHz, 1.9 GHz, and 5.8 GHz that the FCC controls~\cite{tse2005fundamentals}. To find their wavelength, we can use the equation $\lambda = c/f$, where $\lambda$ is the wavelength, $c$ is the speed of light, and $f$ is the frequency~\cite{commsbrief2024wavelength}. At those frequencies, radio wavelengths are extremely small, theoretically suggesting that atmospheric changes like raindrops or ice crystals could provide interference to their signals. However, the question remains: do these theoretical interference mechanisms actually produce significant, measurable effects on consumer internet performance?
+
+Electromagnetic waves follow well-established physics rules that create theoretical connections between weather conditions and signal quality. In a vacuum, signal power decreases with distance squared, but the atmosphere in our real world is much more complicated. Signals bounce off buildings and people, they can get absorbed by trees or rainfall, and various other dispersions can happen to the waves throughout our atmosphere~\cite{tse2005fundamentals}. The key question for this research is whether these atmospheric interactions create practically significant changes in internet performance, or if they're overwhelmed by other factors like network congestion and infrastructure quality.
+
+This bouncing around in space is called multi-path propagation, meaning the waves will take multiple different paths to reach their destination. Each path will have different delays and strengths associated with them, and when they combine at their target, they can either add together constructively (good signal) or cancel each other out destructively (bad signal)~\cite{tse2005fundamentals}. While temperature changes can theoretically bend radio waves and alter the refractive index of air~\cite{moraga_weather_radio}, the practical question is whether these changes are large enough to matter compared to the much stronger effects of physical obstacles, network load, and infrastructure limitations.
+
+To make sense of this complex propagation environment, engineers model wireless channels as mathematical systems. Tse and Viswanath explain that despite all the complexity, ``the effect of mobile users, arbitrarily moving reflectors and absorbers, and all of the complexities of solving Maxwell's equations, finally reduce to an input/output relation between transmit and receive antennas which is simply represented as the impulse response of a linear time-varying channel filter"~\cite{tse2005fundamentals}.
+
+The basic relationship is:
+\begin{equation}
+y(t) = \int h(\tau, t)x(t - \tau)d\tau
+\end{equation}
+
+Where $x(t)$ is what you transmit, $y(t)$ is what you receive, and $h(\tau, t)$ is the ``channel impulse response" that captures all the multipath effects. The key insight is that this $h(\tau, t)$ changes over time as environmental conditions change, including weather conditions~\cite{tse2005fundamentals}.
+
+Modern WiFi systems use multiple antennas and advanced signal processing to combat environmental interference. These systems might switch to lower data rates or use error correction more aggressively in certain conditions, but attributing performance changes specifically to weather rather than network congestion or other factors requires careful statistical analysis. The challenge is separating correlation from causation when multiple factors affect performance simultaneously.
+
+The math behind wireless communication shows that weather effects are theoretically measurable, but whether they're practically significant compared to network infrastructure and usage patterns is an empirical question that this research will address.
+
+\section{Laboratory Studies and Real-World Applicability}
+
+Research has documented physical mechanisms through which weather could affect wireless performance, but the magnitude of these effects varies significantly by frequency band and geographic location. Studies of 5G millimeter-wave systems operating above 24 GHz have shown that atmospheric effects become more pronounced at these higher frequencies. However, the relevance of these findings to consumer WiFi systems operating at 2.4 GHz and 5 GHz remains limited.
+
+Nandi and Maitra's study of rain attenuation effects for 5G mm-wave communication found that geographic location plays a crucial role in determining weather impacts~\cite{nandi2018rain}. Their research specifically noted that ``for different temperate locations, rain attenuation does not contribute significantly to the overall path loss at the mm-wave band for a small cell size of 200 m," while tropical locations showed more substantial effects. This geographic distinction is particularly relevant for the Northern Virginia study region, which experiences a temperate climate. If rain attenuation is minimal even at higher mm-wave frequencies in temperate regions, effects should be even smaller at the lower frequencies used for consumer internet services.
+
+The effects documented in controlled experiments for satellite communications and long-distance microwave links, where signals travel through kilometers of atmosphere, may not translate to short-range consumer WiFi or cellular connections. Luomala and Hakala conducted systematic measurements using 2.4 GHz wireless sensor networks and found that signal strength was influenced by ambient temperature and humidity, reporting that ``variation in signal strength can be best explained by the variation in temperature"~\cite{luomala2015effects}. However, their experiments measured signal strength in controlled settings rather than actual user-experienced download speeds or connectivity quality. Signal strength is only one component of overall network performance, and modern wireless systems are designed to maintain throughput despite variations in signal quality.
+
+Real-world studies show more modest effects than laboratory experiments suggest. Kale studied outdoor WiFi networks and found a correlation coefficient of -0.36 between temperature and transmission failures~\cite{kale2021impact}. While statistically significant, this correlation explains only about 13\% of the variance in transmission failures ($R^2 = r^2 = 0.36^2 = 0.1296$)~\cite{cohen1988statistical}, suggesting that other factors play much larger roles. The study controlled for some factors like user behavior patterns, but network load and infrastructure quality, which likely vary systematically with time of day and location, may be more important predictors than weather.
+
+The critical gap between these findings and practical applications is that controlled experiments isolate individual variables under idealized conditions that may not reflect the complexity of operational networks. While temperature-dependent changes in atmospheric refractive index and water vapor content are theoretically valid mechanisms for signal degradation, the question remains whether these effects are large enough to impact real-world download speeds in temperate climates after accounting for compensatory techniques and whether they matter compared to dominant factors like infrastructure quality, network congestion, and ISP-level management. Testing this requires empirical analysis of real-world usage data rather than controlled laboratory measurements.
+
+\section{State of Current Research}
+
+Current research has documented correlations between weather and wireless performance, but these correlations are often weak and don't necessarily indicate causation. Looking at what has already been done reveals significant gaps between theoretical predictions and observed real-world effects. The research landscape shows that while weather can affect signals under certain conditions, other factors typically dominate internet performance variation.
+
+Statistical research has documented correlations between weather variables and wireless performance metrics, but correlation coefficients are generally modest. Studies show temperature, humidity, and rain have measurable correlations with performance, but these correlations typically explain less than 20\% of performance variation~\cite{kale2021impact}. This suggests that the majority of performance variation comes from non-weather factors. The challenge in interpreting these studies is distinguishing weather effects from confounding variables that vary with weather, such as user behavior patterns or network maintenance schedules.
+
+Traditional network prediction approaches use auto-regressive models that focus on traffic patterns and usage history. Recent research has explored deep learning approaches with attention mechanisms for network traffic prediction~\cite{SU2024104359}, emphasizing the importance of temporal feature extraction over external environmental factors. Advanced machine learning approaches like LSTM networks have been applied to network performance prediction~\cite{nayak2021_5gtraffic}. The machine learning literature generally focuses on temporal patterns in network usage and application-level traffic classification rather than environmental factors.
+
+One revealing aspect of machine learning research is that models trained without weather data often achieve similar predictive accuracy to models that include weather variables. This suggests that time-based patterns (hour of day, day of week) and recent performance history may capture most of the predictable variation in network performance. When weather variables do provide additional value, it's often in predicting rare extreme events rather than typical day-to-day performance variation.
+
+Real-world network data from M-Lab provides extensive wireless performance measurements across diverse conditions~\cite{mlab2025home}, offering potential for large-scale analysis of factors affecting internet performance. The Network Diagnostic Tool provides standardized measurements~\cite{mlab2025ndt}, but isolating weather effects from confounding factors like geographic location, ISP infrastructure quality, and temporal usage patterns remains a challenge that requires a careful statistical approach.
+
+The historical weather data provided by the NOAA National Weather Service~\cite{nws2024timeseries} enable correlation analysis between weather and performance metrics, but such analyses must carefully control for confounding variables. For instance, heavy rain might correlate with reduced internet usage as people stay indoors, which might lead them to using the internet more, causing network congestion. A similar example could be with extreme weather forcing people inside, causing them to use the internet more.
+
+Current research hasn't adequately addressed whether documented weather-wireless correlations represent practically significant effects or merely statistical artifacts of large datasets. Most studies focus on finding statistically significant correlations without evaluating practical significance or comparing weather effects to other known performance drivers. This creates an opportunity for research that directly compares the explanatory power of weather variables to network-based factors.
+
+\section{Research Objectives and Contributions}
+
+While existing research has documented theoretical mechanisms and laboratory correlations between weather and wireless performance, there's a critical gap in understanding whether these effects matter in real-world consumer internet scenarios. My research will directly address this gap by empirically testing whether weather variables provide meaningful explanatory power for internet download speeds across Northern Virginia, compared to network usage patterns and temporal factors.
+
+Unlike existing studies that focus on if weather correlations exist, my research will determine whether they matter. Using multiple regression approaches and statistical analysis techniques, I'll measure exactly how much of the download speed variation can be attributed to weather conditions versus time-based patterns. The methodology will also compare regression models with and without weather variables to directly quantify their added predictive value. I'll start with weather-only models to establish baseline performance, then compare these to a time-based model (hour of day), and finally evaluate whether combined models show meaningful improvement. This systematic comparison will reveal whether weather adds practical predictive power or merely statistical noise.
+
+I'll also investigate whether extreme weather conditions, which theoretically should show the strongest effects, actually produce measurably different internet performance compared to normal conditions. Using percentile-based definitions of extreme conditions (90th percentile precipitation, wind speed, temperature extremes), I'll test whether even the most severe weather shows practically significant impacts. This addresses whether weather matters even in cases where physics suggests it should matter most.
+
+The analysis will emphasize the distinction between statistical significance and practical significance. With large datasets, even tiny correlations become statistically significant, but this doesn't mean they're useful for prediction or worth considering in operational decisions~\cite{sullivan2012effect}. I'll use effect size measures and variance explained metrics to evaluate practical importance beyond mere statistical significance.
+
+For rural areas specifically, this research will help clarify whether commonly cited weather-related connectivity issues actually stem from weather or from infrastructure limitations that happen to coincide with certain weather patterns. If rural internet performance is driven primarily by infrastructure quality and network congestion rather than local weather conditions, this has important implications for policy and investment decisions.
+
+The practical impact will be demonstrated through model comparison metrics that show whether weather-based predictions offer meaningful improvements over simpler baseline models. If weather variables don't substantially improve predictions, this finding challenges the common narrative that weather is a significant driver of connectivity issues and suggests that infrastructure and network management are more important targets for improvement.
+
+By rigorously testing whether documented theoretical and laboratory weather effects translate to practically significant impacts on consumer internet performance, my research will provide empirical evidence to either support or challenge common assumptions about weather's role in connectivity issues. This evidence-based approach will help guide both future research and practical decisions about network infrastructure and management priorities.
+
+\chapter{Data}
+
+\section{Data Collection}
+
+The data collected in this project was from two sources: one for weather data and one for internet data. Hourly meteorological measurements, including but not limited to temperature, precipitation, humidity, wind speed, and visibility, were collected from the National Weather Service's Washington Dulles International Airport (KIAD) weather station~\cite{nws2024timeseries}. They use a network of automated systems, including Automated Surface Observing Systems (ASOS) and weather balloons. It should be noted that Precipitation in the National Weather Service's dataset is listed as being ``rain, sleet, snow, hail, etc."~\cite{nws2024precipitation}. By accessing their publicly available data, I was able to gather weather data from August 2022 to August 2025, the features being as such:
+
+\begin{table}
+    \centering
+    \begin{tabular}{lll} \hline
+        \emph{Column} & \emph{Unit} & \emph{Comment} \\ \hline
+        Date            & Date            & the date at observation\\
+        Temperature     & C\textdegree        & the temperature in Celsius\\
+        Dew Point       & C\textdegree       & the dew point in Celsius\\
+        Humidity        & \%              & the percentage of humidity\\
+        Precipitation   & mm              & the amount of precipitation in mm \\
+        Heat Index      & category           & indicates the potential effects of apparent temperatures \\
+        Visibility      & miles           & the furthest distance visible in miles\\
+        Wind Speed      & kph             & the wind speed in kph\\
+        Gust            & kph             & the rapid fluctuations in wind speed\\
+        Direction       & Degree from 0-360 & the direction the wind is flowing\\
+        Wind Chill      & C\textdegree         & the wind chill in Celsius\\
+        \hline
+    \end{tabular}
+    \caption{Weather Dataset}
+    \label{tab:Weather_Dataset}
+\end{table}
+
+The internet data was collected from Measurement-Lab's database. They host their dataset on Google Cloud, and by joining their discussion group on Google, they allow you to use Google's BigQuery to access their data, free of charge~\cite{mlab2025data}. The data I collected was from 7 cities in the Northern Virginia area. I ensured these 7 cities were well within the scope of what KIAD can accurately report and that they were spread out enough to capture the full scope of KIAD's weather reports. These cities were Leesburg, Manassas, Centreville, Sterling, and Herndon in Virginia. The Maryland cities were Gaithersburg and Rockville. The specific metrics collected from these cities were their average download speeds and the number of tests per hour for the 3-year period. 
+
+\begin{table}
+    \centering
+    \begin{tabular}{lll} \hline
+        \emph{Column} & \emph{Unit} & \emph{Comment} \\ \hline
+        Date            & Date            & the date at observation\\
+        Hour            & Hour            & the hour at observation\\
+        Download Speed  & Mbps            & the average download speed in Mbps \\ 
+        Test Count      & int             & the number of tests at per hour\\ \hline
+    \end{tabular}
+    \caption{Internet Speed Dataset}
+    \label{tab:Internet_Speed_Dataset}
+\end{table}
+
+By combining these 2 datasets, I produced a 3-year-long dataset with weather and internet data with many features, allowing me to test the weather's effect on internet download speeds. 
+
+\section{Preliminary Dataset Analysis}
+
+Gathering the weather data wasn't as easy as I had hoped because every feature was downloaded separately, since querying weather data from over 3 years put a strain on NWS's website. To combat this, I concatenated each feature with each other to make one large weather dataset, ensuring the observations lined up. When initially trying to combine these datasets, I noticed that only the internet data had the hour and date separated, so I used Python to separate the two and ensure consistent formatting and to merge the weather and internet data. Other than those two issues, actually accessing and creating the one dataset with both weather and internet data was easy. 
+
+After collecting the data and creating the dataset, I started to analyze the features and clean them. I found out that 3 of my features ($HeatIndex$, $WindChill$, and $Gust$) had over 70\% of their data missing, as seen in the figure below, so I removed those features entirely. With the rest of the missing values, I removed the rows with any missing values since I didn't want to create false relationships within the data. 
+
+\begin{figure}[ht!]
+    \centering
+    \begin{verbatim}
+    % of values missing:
+    Date       Hour       Temperature     Dew.Point      Relative.Humidity 
+    0.0000     0.0000     0.0033          0.0033         0.0033 
+    Precipitation     Heat.Index     Wind.Chill     Wind.Speed     Gust 
+    0.0033            0.8765         0.7470         0.0033         0.8586 
+    Direction     Visibility     Download.Speed     Test.Count 
+    0.0033        0.0033         0.0000             0.0000
+    \end{verbatim}
+    \caption{\% of Missing Data in Initial Dataset}
+    \label{fig:missing_data}
+\end{figure}
+
+After skimming through the data, I noticed that some features seemed to have very similar values and patterns, so I created a correlation matrix to check for any collinearity. The matrix revealed that $DewPoint$ and $Temperature$ were highly correlated, as were $Direction$ and $WindSpeed$. To allow linear regression models to perform well, $DewPoint$ and $Direction$ were removed. Additionally, $Test Count$ was removed since all it explains is the number of tests per observation; intuitively, it doesn't have any impact on the download speed itself. The following figure is how the completed dataset looked:
+
+\begin{table}
+    \centering
+    \begin{tabular}{lll} \hline
+        \emph{Column} & \emph{Unit} & \emph{Comment} \\ \hline
+        Date            & Date            & the date at observation\\
+        Hour            & Hour            & the hour at observation\\
+        Temperature     & C\textdegree        & the temperature in Celsius\\
+        Humidity        & \%              & the percentage of humidity\\
+        Precipitation   & mm              & the amount of precipitation in mm \\
+        Visibility      & miles           & the furthest distance visible in miles\\
+        Wind Speed      & kph             & the wind speed in kph \\
+        Download Speed  & Mbps            & the download speed in Mbps \\ \hline
+    \end{tabular}
+    \caption{Final Dataset}
+    \label{tab:Final_Dataset}
+\end{table}
+
+\chapter{Theory}
+
+\section{Research Hypothesis}
+This study tests the commonly held assumption that weather conditions significantly predict internet download speeds in rural Northern Virginia areas. The null hypothesis ($H_0$) states that weather variables (temperature, precipitation, humidity, wind speed, and visibility) do not provide meaningful explanatory power for download speed variation. The alternative hypothesis ($H_A$) states that weather conditions are significant predictors of download speed performance.
+
+Formally, we will first perform a correlation analysis on all features to see which ones are actually correlated to download speeds. Then we will create and compare a regression model of only weather variables, only time variables, and a combined model. They will be evaluated through comparing the coefficient of determination ($R^2$) and conducting model F-tests to determine if weather variables add statistically significant predictive power. We will also test both normal and extreme weather conditions to see if the weather conditions must be extreme to affect download speeds. 
+
+\section{Model Specification}
+Following the framework established by Tse and Viswanath~\cite{tse2005fundamentals} for analyzing factors affecting wireless signal propagation, we construct multiple linear regression models to isolate and quantify weather effects on internet performance. The general form of our regression model is:
+\begin{equation}
+Y_i = \beta_0 + \sum_{j=1}^{p} \beta_j X_{ij} + \epsilon_i
+\end{equation}
+where $Y_i$ represents the download speed (Mbps) for observation $i$, $\beta_0$ represents the intercept, which is the expected value of $Y_i$ when all independent variables $X_{ij}$ are zero. $X_{ij}$ represents the $j$-th predictor variable out of the number of independent variables, $p$. $\beta_j$ is the regression coefficient for the $j$-th independent variable, and $\epsilon_i$ represents the error term. For all models, the data will be randomly split into a training and a testing set. The training data holds 80\% of the data, while the testing set only holds the other 20\%.
+
+We specify three primary models for comparison:
+
+\textbf{Model 1: Weather-Only Model}
+\begin{equation}
+Y_i = \beta_0 + \beta_1 \text{Temp}_i + \beta_2 \text{Humid}_i + \beta_3 \text{Precip}_i + \beta_4 \text{Vis}_i + \beta_5 \text{Wind}_i + \epsilon_i
+\end{equation}
+This model isolates weather variables as predictors, establishing baseline performance for weather-based prediction alone.
+
+\textbf{Model 2: Time-Based Model}
+\begin{equation}
+Y_i = \beta_0 + \beta_1 \text{Hour}_i + \epsilon_i
+\end{equation}
+This model uses the hour of the day as its only predictor for $DownloadSpeed$. While meaningful results are not expected, it will provide insight as to how much the time of day impacts our dependent variable.
+
+\textbf{Model 3: Combined Model}
+\begin{equation}
+\begin{split}
+Y_i = \beta_0 + \beta_1 \text{Hour}_i + \beta_2 \text{Temp}_i + \beta_3 \text{Humid}_i +\beta_4 \text{Precip}_i + \beta_5 \text{Vis}_i + \beta_6 \text{Wind}_i + \epsilon_i
+\end{split}
+\end{equation}
+
+This combined model allows us to assess whether weather variables contribute additional explanatory power beyond time-based factors.
+
+\chapter{Results}
+
+\section{Feature Analysis}
+
+When plotting all weather features against $DownloadSpeed$, it's easy to see that these features share little or no relationship with $DownloadSpeed$, as there is no clear or discernible pattern in their plots.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{weather_scatterplots.png}
+    \caption{Scatterplot of Download Speed against Weather Features}
+    \label{fig:weather_scatterplots}
+\end{figure}
+
+\section{Correlation Analysis}
+When creating a correlation matrix of all features in the dataset, it was revealed that no feature had a correlation coefficient greater than 0.1. While this doesn't definitively prove that weather features are not predictors of download speeds, it does highlight that weather might not have the predictive potential for internet speeds that previous studies suggest.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{correlation_matrix.png}
+    \caption{Correlation Matrix}
+    \label{fig:correlation_matrix}
+\end{figure}
+
+\section{Model Analysis}
+
+\subsection{Weather-Only Model}
+
+This model's results strongly support our hypothesis that weather variables do not affect download speeds. This weather-only model achieved a statistical significance of F = 39.16 and $p<0.001$; however, the $R^2$ of 0.009 achieved from both the training and test data shows that it only explains 0.9\% of the variance in download speeds. While $Temperature$ and $WindSpeed$ are significant, their practical effects on $DownloadSpeed$ are negligible. For example, the average internet speed in the US for 2023 was 196 Mbps, while 2024 was 214 Mbps~\cite{highspeedinternet2024fastest}. This model suggests that a 10 C\textdegree  change in $Temperature$ would only affect the $DownloadSpeed$ by 6.8 Mbps, a mere 3\% change from the average national internet speed. This shows that while this feature is statistically significant, it is not practically significant.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{verbatim}
+    Residuals:
+        Min      1Q  Median      3Q     Max 
+    -174.38  -52.27   -5.85   38.12  487.02 
+    
+    Coefficients:
+                             Estimate Std. Error t value Pr(>|t|)    
+    (Intercept)            200.233464   4.755227  42.108  < 2e-16 ***
+    Temperature             -0.679456   0.053769 -12.637  < 2e-16 ***
+    Relative.Humidity       -0.042996   0.030891  -1.392   0.1640    
+    One.Hour.Precipitation  -0.013580   0.007029  -1.932   0.0534 .  
+    Wind.Speed               0.319486   0.069099   4.624 3.79e-06 ***
+    Visibility              -0.542457   0.349399  -1.553   0.1205    
+    ---
+    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+    
+    Residual standard error: 76.35 on 20970 degrees of freedom
+    Multiple R-squared:  0.009252,	Adjusted R-squared:  0.009015 
+    F-statistic: 39.16 on 5 and 20970 DF,  p-value: < 2.2e-16
+    \end{verbatim}
+    \caption{Linear Regression output for Weather-Only Model}
+    \label{fig:weather-only_model}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{actual_vs_predicted_weather.png}
+    \caption{Actual vs Predicted for Weather-Only Model}
+    \label{fig:weather_avp}
+\end{figure}
+
+\clearpage
+
+\subsection{Time-Based Model}
+
+This model's results show that time-of-day also does not hold any predictive power for $DownloadSpeed$. Like the weather-based model, we do have a statistically significant effect on the variance explained in $DownloadSpeed$ because of its p-value of less than 0.001. That being said, this model only explains 0.522\% of the variance in $DownloadSpeed$ for both the training and testing data. For context, as the hour increases (as it gets later in the day), we only see a 0.8 Mbps decrease in $DownloadSpeed$. So throughout the day, the total change would be less than 20 Mbps, less than 10\% change from the national internet speed average~\cite{highspeedinternet2024fastest}. Now we know that both the weather-only and time-based models are not reliable predictors of $DownloadSpeed$ for areas in northern Virginia. 
+
+\begin{figure}[ht!]
+    \centering
+    \begin{verbatim}
+    Residuals:
+        Min      1Q  Median      3Q     Max 
+    -174.15  -51.79   -5.94   38.98  485.49 
+    
+    Coefficients:
+                 Estimate Std. Error t value Pr(>|t|)    
+    (Intercept) 194.90590    1.02295  190.53   <2e-16 ***
+    Hour         -0.80053    0.07631  -10.49   <2e-16 ***
+    ---
+    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+    
+    Residual standard error: 76.5 on 20974 degrees of freedom
+    Multiple R-squared:  0.00522,	Adjusted R-squared:  0.005172 
+    F-statistic: 110.1 on 1 and 20974 DF,  p-value: < 2.2e-16
+    \end{verbatim}
+    \caption{Linear Regression output for Time-Based Model}
+    \label{fig:time-based_model}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{actual_vs_predicted_time.png}
+    \caption{Actual vs Predicted for Time-Based Model}
+    \label{fig:time_avp}
+\end{figure}
+
+\clearpage
+
+\subsection{Combined Model}
+
+By combining both the temporal and meteorological data for linear regression, we achieved an $R^2$ of 0.0141 or 1.4\% explained variance on the training data and an $R^2$ of 0.0154 or 1.5\% explained variance on the test data, further proving that weather features have only a negligible effect on $DownloadSpeed$ for northern Virginia. This demonstrates that 98.5\% of the variance in internet speeds for northern Virginia is explained by other variables. While these tests are strong evidence to support my hypothesis, we can still do more tests to confirm it.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{verbatim}
+    Residuals:
+        Min      1Q  Median      3Q     Max 
+    -178.10  -51.64   -5.22   38.99  484.43 
+    
+    Coefficients:
+                            Estimate Std. Error t value Pr(>|t|)    
+    (Intercept)            216.37897    5.00144  43.263  < 2e-16 ***
+    Hour                    -0.82353    0.08085 -10.186  < 2e-16 ***
+    Temperature             -0.59701    0.05425 -11.006  < 2e-16 ***
+    Relative.Humidity       -0.13059    0.03199  -4.082 4.49e-05 ***
+    One.Hour.Precipitation  -0.01022    0.00702  -1.456   0.1454    
+    Wind.Speed               0.33487    0.06895   4.857 1.20e-06 ***
+    Visibility              -0.80571    0.34950  -2.305   0.0212 *  
+    ---
+    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+    
+    Residual standard error: 76.16 on 20969 degrees of freedom
+    Multiple R-squared:  0.01413,	Adjusted R-squared:  0.01385 
+    F-statistic: 50.09 on 6 and 20969 DF,  p-value: < 2.2e-16
+    \end{verbatim}
+    \caption{Linear Regression output for Combined model}
+    \label{fig:combined_model}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{actual_vs_predicted_combined.png}
+    \caption{Actual vs Predicted for Combined Model}
+    \label{fig:combined_avp}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{residual_plot.png}
+    \caption{Residual Plot for Combined Model}
+    \label{fig:residual}
+\end{figure}
+
+\clearpage
+
+\section{Extreme Weather Analysis}
+Our model analysis shows that for August 2022 to August 2025, weather and temporal data were not useful in predicting $DownloadSpeed$. But what if $DownloadSpeed$ only gets affected in extreme weather conditions? While there aren't many times in this dataset that hold extreme weather conditions since this is from Northern Virginia, we can label the dataset to categorize these values and try to perform analysis on them. We'll do this by creating 3 categorical columns that will indicate extreme temperatures, heavy precipitation, and high wind.
+
+\subsection{Heavy Precipitation Analysis}
+
+By performing Welch's Two Sample T-test on the observations of heavy precipitation (90th percentile), we achieve a p-value of 0.43, which is above our significance level of 0.05. This means we fail to reject the null hypothesis and state that the mean of $DownloadSpeed$ during extreme precipitation values does not differ from the mean of $DownloadSpeed$ during normal precipitation values. To see how much variance is explained by precipitation, we use this equation: 
+\begin{equation}
+    R^2 = \frac{t^2}{t^2 + df}
+\end{equation}
+So with our t-statistic as $t$ and degrees of freedom $df$, we find that the $R^2$ is 0.0003. This means that precipitation only explains 0.03\% of $DownloadSpeed$.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{verbatim}
+        Welch Two Sample t-test
+    
+    data:  Download.Speed by extreme_precip
+    t = -0.78154, df = 1866.3, p-value = 0.4346
+    alternative hypothesis: true difference in means between 
+    group Heavy Precipitation and group Normal is not equal to 0
+    95 percent confidence interval:
+     -5.216521  2.243687
+    sample estimates:
+    mean in group Heavy Precipitation     mean in group Normal 
+                    184.3786                 185.8650 
+    \end{verbatim}
+    \caption{Welch Two Sample t-test for Precipitation}
+    \label{fig:welch_precip}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{boxplot_precip.png}
+    \caption{Box plot of Download Speed vs Heavy and Normal Precipitation}
+    \label{fig:precipitation_boxplot}
+\end{figure}
+
+\clearpage
+
+\subsection{High Wind Speed Analysis}
+
+By performing Welch's Two Sample T-test on the observations of high wind speed (90th percentile), we achieve a t-statistic of 5.06, for 2596 degrees of freedom, leaving us with a p-value less than 0.001. The mean for higher winds, 193.7 Mbps, was higher than the normal wind speed's average, 185 Mbps, by 8.7 Mbps. Since this was counterintuitive (higher winds mean faster download speeds), Cohen's d turned out to be 0.113, which means the actual difference in means is only 0.11 standard deviations higher for high winds~\cite{frost2024cohens}. So even though, yes, high winds statistically have a higher effect than normal wind speeds, the practical significance is minimal. By using the $R^2$ formula from the heavy precipitation analysis, we find that wind speed accounts for only 1\% of the variance in $DownloadSpeed$.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{verbatim}
+        Welch Two Sample t-test
+    
+    data:  Download.Speed by high_wind
+    t = 5.0641, df = 2596.4, p-value = 4.392e-07
+    alternative hypothesis: true difference in means between 
+    group High Wind and group Normal is not equal to 0
+    95 percent confidence interval:
+      5.321379 12.046456
+    sample estimates:
+    mean in group High Wind    mean in group Normal 
+                   193.7329                185.0490
+    \end{verbatim}
+    \caption{Welch Two Sample t-test for Wind Speed}
+    \label{fig:welch_wind}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{boxplot_wind.png}
+    \caption{Box plot of Download Speed vs High and Normal Wind Speeds}
+    \label{fig:wind_boxplot}
+\end{figure}
+
+\clearpage
+
+\subsection{Extreme Temperature Analysis}
+
+For temperature, it was split into 3 categories: $Very Cold$, $Normal$, and $Very Hot$. So to see if there were differences, one-way ANOVA was performed. ANOVA showed that there were differences in average download speeds for each group so we then used a post-hoc test to see which groups differ. The Tukey HSD tests showed that extremely cold temperatures were faster than normal temperatures, which in turn were faster than extremely hot temperatures. The total difference between extreme cold and hot conditions was 22.8 Mbps.
+Since we know it shouldn't have a large effect on download speeds, we found the eta squared ($\eta^2$), which tells us the effect of the extreme temperatures from our ANOVA on our dependent variable using this equation~\cite{nationaluniversity2024eta}:
+
+\begin{equation}
+    \eta^2 = \frac{SS_{effect}}{SS_{effect} + SS_{error}}
+\end{equation}
+
+Our result is 0.0045 or 0.45\% variance explained with these extreme temperature variables, leaving 99.55\% of variation attributable to other factors. The observed pattern likely reflects confounding variables such as seasonal network usage patterns or equipment thermal effects rather than atmospheric signal interference. This demonstrates the critical distinction between statistical significance (achieved with large samples) and practical significance (actual predictive value).
+
+\begin{figure}[ht!]
+    \centering
+    \begin{verbatim}
+        Df    Sum Sq Mean Sq F value Pr(>F)    
+    extreme_temp     2    699121  349561   59.66 <2e-16 ***
+    Residuals    26213 153587891    5859                   
+    ---
+    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+    \end{verbatim}
+    \caption{One-Way ANOVA for Temperature}
+    \label{fig:anova}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \begin{verbatim}
+          Tukey multiple comparisons of means
+        95% family-wise confidence level
+    
+    Fit: aov(formula = Download.Speed ~ extreme_temp, data = df)
+    
+    $extreme_temp
+                             diff       lwr       upr p adj
+    Very Cold-Normal     8.770746   5.04331  12.49818 1e-07
+    Very Hot-Normal    -14.025325 -17.77400 -10.27665 0e+00
+    Very Hot-Very Cold -22.796071 -27.78480 -17.80734 0e+00
+    \end{verbatim}
+    \caption{Tukey HSD for Temperature Conditions}
+    \label{fig:tukey}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{boxplot_temperature.png}
+    \caption{Box plot of Download Speed vs Temperature Conditions}
+    \label{fig:temperature_boxplot}
+\end{figure}
+
+\clearpage
+
+\chapter{Conclusion}
+%%%Please write one page summarizing what you have discovered.
+This study examined whether weather conditions predict internet download speeds in Northern Virginia. Through statistical analysis of over 20,000 hourly measurements paired with meteorological data, the results demonstrate that weather is not a meaningful predictor of internet performance.
+
+\section{Key Findings}
+
+\begin{table}[ht!]
+    \begin{tabular}{llll} \hline
+    \emph{Weather Factor} & \emph{Significance} & \emph{Effect Size} & \emph{Variance Explained}\\ \hline
+        Precipitation (extreme)            & Not Significant (p $>$ 0.05)            & Cohen's $d = 0.019$       &     $0.03\%$\\
+        Wind (extreme)            & Significant (p $<$ 0.001)            & Cohen's $d = 0.113$       &     $1\%$\\
+        Temperature (extreme)            & Significant (p $<$ 0.001)            & $\eta^2 = 0.0045$       &     $0.45\%$\\
+        Combined Model         & Significant (p $<$ 0.001)            & $R^2 = 0.015$       &     $1.5\%$\\
+        \hline
+    \end{tabular}
+    \caption{Weather Feature Analysis Summary}
+    \label{tab:analysis_summary}
+\end{table}
+
+Weather variables explained only 0.9\% of download speed variation ($R^2=0.009$), while combined temporal and meteorological models achieved just 1.5\% ($R^2=0.015$). Extreme weather analysis revealed negligible effects: heavy precipitation showed no significant impact ($p = 0.43$, Cohen's $d = 0.019$), while temperature explained only 0.45\% of variance ($\eta^2 = 0.0045$). A 10\textdegree C temperature change affected speeds by merely 6.8 Mbps, a 3\% change from average national internet performance. These findings demonstrate that statistical significance ($p < 0.001$) does not imply practical importance.
+
+\section{Implications and Limitations}
+
+These results challenge assumptions about weather-related connectivity issues in the Northern Virginia area. Infrastructure quality, network congestion, and ISP capacity limitations are far more important than local weather conditions. Resources for improving broadband should prioritize network infrastructure over weather mitigation strategies. This study's data from a single location may not generalize to regions with more extreme weather, and catastrophic events causing physical infrastructure damage were not captured.
+
+\section{Conclusion}
+
+Weather conditions explain less than 2\% of download speed variation. While atmospheric interference is theoretically valid, its practical impact is negligible. For communities seeking improved connectivity, investment should focus on infrastructure quality and network capacity rather than weather concerns.
+
+%% include the following commands if there are any appendices
+\appendix
+\appendixeqnumbering
+%\include{Appendix}
+
+\chapter{Software} 
+
+\begin{figure}[ht!]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \small
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_1.r}
+    \end{boxedminipage}
+    \caption{capstone\_1.r}
+    \label{fig:capstone_1.r}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_2.r}
+    \end{boxedminipage}
+    \caption{capstone\_2.r}
+    \label{fig:capstone_2.r}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_3.r}
+    \end{boxedminipage}
+    \caption{capstone\_3.r}
+    \label{fig:capstone_3.r}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_4.r}
+    \end{boxedminipage}
+    \caption{capstone\_4.r}
+    \label{fig:capstone_4.r}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_5.r}
+    \end{boxedminipage}
+    \caption{capstone\_5.r}
+    \label{fig:capstone_5.r}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_6.r}
+    \end{boxedminipage}
+    \caption{capstone\_6.r}
+    \label{fig:capstone_6.r}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_7.r}
+    \end{boxedminipage}
+    \caption{capstone\_7.r}
+    \label{fig:capstone_7.r}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_8.r}
+    \end{boxedminipage}
+    \caption{capstone\_8.r}
+    \label{fig:capstone_8.r}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{boxedminipage}[tb]{\columnwidth}
+        \internallinenumbers
+        \resetlinenumber[1]
+        \verbatiminput{capstone_9.r}
+    \end{boxedminipage}
+    \caption{capstone\_9.r}
+    \label{fig:capstone_9.r}
+\end{figure}
+%%
+%%  bibliography
+%%
+
+%% Use the bibliographicstyle command to use a .bst file for your citation style.
+%% If you use biblatex, comment this out and use it as directed in the package documentation.
+\bibliographystyle{unsrt}
+
+\bibliography{capstone_sources}
+
+%%
+%% biography
+%%
+\biography
+Byron Washington is a senior at George Mason University and plans to graduate in the Spring 2026 semester. He worked as a data analyst intern at REI Systems under a contract for GSA in the summer of 2025.
+\end{document}

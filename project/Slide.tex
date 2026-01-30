@@ -1,0 +1,266 @@
+%--------------------------------------------------------------------+
+% capstone_proposal_slide.tex                               |
+% Copyright (C) 2024--2025 Dr. Kent L. Miller.  All rights reserved. |
+% License: GNU GPL3+.  See http://www.gnu.org/licenses/              |
+%--------------------------------------------------------------------+
+\documentclass[clock,final,landscape,letterpaper]{slides}
+\usepackage{graphics,hyperref,siunitx, gensymb}
+\usepackage{graphicx}                    %   for imported graphics
+\usepackage{amsmath}                     %%
+\usepackage{amsfonts}                    %%  for AMS mathematics
+\usepackage{amssymb}                     %%
+\usepackage{amsthm}                      %%
+\usepackage[normalem]{ulem}              %   a nice standard underline package
+\usepackage[noadjust,verbose,sort]{cite} %   arranges reference citations neatly
+\usepackage{setspace}                    %   for line spacing commands
+\usepackage{siunitx}                     %   for numbers with SI units
+\usepackage{textcomp}
+\usepackage{float, url}
+\usepackage{boxedminipage,verbatim,lineno}
+
+\onlyslides{1-9999}
+%\onlynotes{1-9999}
+
+\begin{document}
+\title{CDS-492:  Capstone for Data Science \\ Fall 2025}
+\author{Byron Washington}
+\date{\today}
+\maketitle
+
+\addtime{60} % Slide 1: 1 minute
+\begin{note}
+  Start with a "hook" to capture the audience's interest.
+\end{note}
+\begin{slide}
+Research Question: How do different weather conditions affect wireless internet performance in Northern Virginia, and is weather actually a significant predictor of connectivity issues?
+
+Rain, temperature extremes, and high winds are commonly blamed for slow internet speeds in rural areas. The assumption is that atmospheric interference degrades wireless signals. But does weather actually matter as much as we think? 
+
+This study tests whether meteorological conditions meaningfully predict internet performance, or if we've been blaming the weather for problems that stem from network infrastructure and usage patterns.
+\end{slide}
+
+\addtime{60} % Slide 2: 1 minute
+\begin{note}
+  Explain the significance of this proposed project to science.
+\end{note}
+\begin{slide}
+Significance
+
+This research challenges the assumption that weather is a major factor in rural internet performance. By showing that network infrastructure and usage patterns matter more than meteorological conditions, this study redirects policy focus toward the actual problems; infrastructure upgrades and network capacity rather than weather-proofing systems. Understanding what really drives connectivity issues has real implications for rural communities that depend on reliable internet access for telemedicine, remote work, and emergency communications.
+
+\end{slide}
+
+\begin{note}
+  Describe prior research.
+\end{note}
+\begin{slide}
+Prior research
+  
+Luomala and Hakala (2015) documented weather effects on signal strength in controlled laboratory settings using 2.4 GHz wireless systems. 
+
+Kale (2021) found a correlation of -0.36 between temperature and WiFi transmission failures, explaining only 13\% of variance.
+
+These studies focus on theoretical models and controlled experiments rather than real-world internet performance, leaving practical significance of weather effects versus infrastructure factors untested.
+
+\end{slide}
+
+\addtime{60} % Slide 4: 1 minute
+\begin{slide}
+Deliverables:
+
+  \begin{itemize}
+    \item Capstone project paper,
+    \item Science paper, and
+    \item Slide presentation.
+  \end{itemize}
+\end{slide}
+
+\addtime{60} % Slide 5: 1 minute
+\begin{note}
+  Describe the experiment that produced the data set.
+\end{note}
+\begin{slide}
+  \twocolumn Method of Inquiry Part 1
+  
+Weather data collected from Washington Dulles International Airport (KIAD) weather station using Automated Surface Observing Systems (ASOS), providing hourly measurements of temperature, precipitation, humidity, wind speed, and visibility from August 2022 to August 2025.
+  
+  \resizebox{\columnwidth}{!}{
+    \includegraphics{dulles.png}
+  }
+  \onecolumn
+\end{slide}
+
+\begin{slide}
+  \twocolumn Method of Inquiry Part 2
+  
+Internet performance data collected from Measurement Lab's database via Google Cloud BigQuery. Average download speeds and test counts gathered hourly from 7 Northern Virginia cities: Leesburg, Manassas, Centreville, Sterling, Herndon, Gaithersburg, and Rockville. Data spans the same 3-year period, enabling direct comparison with weather conditions.
+  
+  \resizebox{\columnwidth}{!}{
+    \includegraphics{mlab.png}
+  }
+  \onecolumn
+\end{slide}
+
+\addtime{60} % Slide 6: 1 minute
+\begin{note}
+  Describe the data set that you will analyze.
+\end{note}
+\begin{slide}
+Method of Data Collection
+
+The final dataset combined weather and internet measurements into over 20,000 hourly observations including these features:
+
+    \begin{tabular}{lll} \hline
+        \emph{Column} & \emph{Unit} & \emph{Comment} \\ \hline
+        Date            & Date            & the date at observation\\
+        Hour            & Hour            & the hour at observation\\
+        Temperature     & C\textdegree        & the temperature in Celsius\\
+        Humidity        & \%              & the percentage of humidity\\
+        Precipitation   & mm              & the amount of precipitation in mm \\
+        Visibility      & miles           & the furthest distance visible in miles\\
+        Wind Speed      & kph             & the wind speed in kph \\
+        Download Speed  & Mbps            & the download speed in Mbps \\ \hline
+    \end{tabular}
+
+\end{slide}
+
+\addtime{60} % Slide 7: 1 minute
+\begin{note}
+  Describe how data will be analyzed
+\end{note}
+\begin{slide}
+Theory
+
+Collect M-Lab internet speed data and NOAA weather data for Northern Virginia, aligning timestamps to match weather conditions with performance measurements from August 2022 to August 2025.
+
+Test correlations between weather variables (temperature, precipitation, humidity, wind, visibility) and download speeds to identify relationships.
+
+Build three regression models, weather-only, time-based (hour), and combined, to compare explanatory power using $R^2$ and F-tests.
+
+Analyze extreme weather conditions (90th percentile precipitation, wind, temperature) using t-tests and ANOVA to test if even severe weather shows practically significant effects. Distinguish between statistical significance and practical significance using effect size measures.
+\end{slide}
+
+\addtime{60} % Slide 8: 1 minute
+\begin{slide}
+  The project integrates what I learned in:
+
+  STAT-350: Introductory Statistics II,
+
+  CDS-301 Scientific Information and Data Visualization, and
+
+  CDS-303 Data Mining
+\end{slide}
+
+\addtime{60} % Slide 9: 1 minute
+
+\begin{slide} % hypothesis 1
+\textbf{First Hypothesis}
+
+$H_1$: Weather conditions and internet performance
+
+$H_0$: Weather conditions do not significantly predict internet performance
+
+$H_a$: Weather conditions significantly predict internet performance
+\end{slide}
+
+\begin{slide} % results 1
+\textbf{Results} 
+
+Weather-only model: $R^2 = 0.009$ (0.9\% variance explained)
+
+Reject $H_0$ (statistically significant, $p < 0.001$)
+
+However, the effect is practically meaningless; a temperature change of 10\textdegree C affects speed by only 6.8 Mbps
+\end{slide}
+
+\begin{slide}
+    \twocolumn
+    \resizebox{\columnwidth}{!}{
+    \includegraphics{weather_results.png}
+    }
+
+    \resizebox{\columnwidth}{!}{
+    \includegraphics{actual_vs_predicted_weather.png}
+    }
+    \onecolumn
+\end{slide}
+
+\begin{slide} % hypothesis 2
+\textbf{Second Hypothesis}
+
+$H_2$: Time-based factors vs weather as predictors
+
+$H_0$: Time-based factors (hour of day) do not explain more variance in internet performance than weather conditions
+
+$Ha$: Time-based factors explain more variance than weather conditions
+\end{slide}
+
+\begin{slide} % results 2
+\textbf{Results} 
+
+Weather model: $R^2 = 0.009$ (0.9\%)
+
+Time model: $R^2 = 0.005$ (0.5\%)
+
+Fail to reject $H_0$ (time actually explained LESS variance than weather)
+
+Both models are essentially useless for prediction
+\end{slide}
+
+\begin{slide}
+    \twocolumn
+    \resizebox{\columnwidth}{!}{
+    \includegraphics{time_results.png}
+    }
+
+    \resizebox{\columnwidth}{!}{
+    \includegraphics{actual_vs_predicted_time.png}
+    }
+    \onecolumn
+\end{slide}
+
+\begin{slide} % hypothesis 3
+\textbf{Third Hypothesis}
+
+$H_3$: Extreme weather effects
+
+$H_0$: Extreme weather conditions do not have larger effects on internet performance than typical conditions
+
+$H_a$: Extreme weather conditions have significantly larger effects than typical conditions
+\end{slide}
+
+\begin{slide} % results 3
+\textbf{Results} 
+
+Heavy rain vs normal: 0.033\% variance explained, $p = 0.43$
+
+High wind vs normal: 1\% variance explained, $p < 0.001$, Cohen's d = 0.113
+
+Extreme temperature vs normal: 0.45\% variance (largest effect: 22.8 Mbps difference), Cohen's d = 0.12
+
+Reject $H_0$ (statistically significant)
+
+However, even extreme conditions showed negligible practical effects
+\end{slide}
+
+\begin{slide}
+  \textbf{Source Materials}
+  
+  For Luomala and Hakala (2015), see
+  
+  \url{https://annals-csis.org/proceedings/2015/pliks/241.pdf}
+
+  For Kale (2021), see
+  
+  \url{https://ijrpr.com/uploads/V2ISSUE11/IJRPR1732.pdf}
+  
+  For internet performance data from Virginia, see
+  
+  \url{https://measurementlab.net}
+
+  For weather data from IAD Weather Station, see
+  
+  \url{https://www.weather.gov/wrh/timeseries?site=KIAD}.
+\end{slide}
+
+\end{document}

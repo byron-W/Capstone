@@ -1,0 +1,78 @@
+%--------------------------------------------------------------------+
+% template_ieee.tex - template file for CDS-492 homework.            |
+% Copyright (C) 2021--2025 Dr. Kent L. Miller.  All rights reserved. |
+% License: GNU GPL3+.  See http://www.gnu.org/licenses/              |
+%--------------------------------------------------------------------+
+% IEEEtran - Institute Electrical and Electronic Engineers
+\documentclass[10pt,final,journal,compsoc,letterpaper,twocolumn]{IEEEtran}
+\usepackage{graphicx,siunitx,hyperref}
+\usepackage[hyperpageref]{backref}
+\usepackage{verbatim, textcomp}
+
+\begin{document}
+\title{CDS-492:  Capstone for Data Science \\ Fall 2025}
+\author{Byron Washington}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+Internet users often blame bad weather for slow connections, but is this assumption supported by data? This study challenges the prevailing narrative by examining whether meteorological conditions actually predict download speeds in Northern Virginia. While existing research documents theoretical mechanisms for atmospheric signal interference and controlled laboratory effects on wireless communications at 2.4 GHz, the gap between laboratory signal measurements and real-world internet performance remains largely unexplored. Using multiple linear regression models and other statistical analyses, this study tested whether temperature, precipitation, humidity, wind speed, and visibility could predict download speeds from over 20,000 hourly observations. Weather variables explained only 0.9\% of download speed variation ($R^2 = 0.009$), and even extreme weather conditions showed negligible practical effects with Cohen's $d < 0.12$ and $\eta^2 = 0.0045$. The combined linear regression model incorporating both weather and time factors achieved just 1.5\% explained variance, demonstrating that 98.5\% of download speed variation stems from other sources. These findings reveal that infrastructure quality and network congestion, not local weather, drive internet performance, a distinction with significant implications for broadband policy and resource investment priorities..
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+Wireless internet connectivity has become essential infrastructure for rural communities, yet when download speeds drop or connections fail, weather conditions are frequently cited as the culprit. Heavy precipitation, temperature extremes, and high winds are commonly blamed for poor internet performance, with the assumption that atmospheric interference degrades signal quality. However, this assumption has rarely been tested with real-world data. While weather can theoretically affect wireless signal propagation, network congestion, infrastructure limitations, and usage patterns may play far more substantial roles in determining internet performance, particularly in rural areas where infrastructure remains limited~\cite{changelabsolutions2024broadband}. This study challenges conventional wisdom by examining whether meteorological conditions are actually meaningful predictors of internet performance in Northern Virginia, testing whether temperature, precipitation, humidity, wind speed, and visibility significantly affect connectivity using over 20,000 hourly download speed measurements paired with comprehensive weather data.
+
+\section{Prior Research}
+
+While the physics behind wireless communication suggests systems should be vulnerable to weather changes, whether these theoretical vulnerabilities translate to measurable real-world effects remains an open question~\cite{tse2005fundamentals}. Studies of 5G millimeter-wave systems have shown that atmospheric effects become more pronounced at higher frequencies, but Nandi and Maitra found that in temperate locations like Northern Virginia, rain attenuation does not contribute significantly to overall path loss even at mm-wave bands~\cite{nandi2018rain}, suggesting effects should be even smaller at the lower frequencies used for consumer internet services. Real-world studies show modest effects: Kale found a correlation of -0.36 between temperature and transmission failures, explaining only 13\% of variance~\cite{kale2021impact}. Advanced machine learning approaches for network performance prediction generally focus on temporal patterns in network usage rather than environmental factors~\cite{nayak2021_5gtraffic, SU2024104359}. The critical gap is that controlled experiments isolate variables under idealized conditions that may not reflect operational network complexity, and current research hasn't adequately addressed whether documented correlations represent practically significant effects or merely statistical artifacts of large datasets, creating a research opportunity that directly compares the explanatory power of weather variables to network-based factors.
+
+\section{Data}
+
+Hourly meteorological measurements including temperature, precipitation, humidity, wind speed, and visibility were collected from the National Weather Service's Washington Dulles International Airport (KIAD) weather station~\cite{nws2024timeseries}, while internet data were collected from Measurement-Lab's database~\cite{mlab2025data} covering seven cities in Northern Virginia (Leesburg, Manassas, Centreville, Sterling, Herndon, Gaithersburg, and Rockville). The combined dataset spanned August 2022 to August 2025, yielding over 20,000 hourly observations. After removing features with over 70\% missing data (Heat Index, Wind Chill, Gust) and addressing collinearity by removing highly correlated variables (Dew Point, Direction), the final dataset contained Date, Hour, Temperature, Humidity, Precipitation, Visibility, Wind Speed, and Download Speed. Data were randomly split into training (80\%) and testing (20\%) sets for model validation.
+
+\section{Theory}
+
+This study tests the assumption that weather conditions significantly predict internet download speeds in rural Northern Virginia. The null hypothesis states that weather variables (temperature, precipitation, humidity, wind speed, and visibility) do not provide meaningful explanatory power for download speed variation. Following the framework established by Tse and Viswanath~\cite{tse2005fundamentals} for analyzing factors affecting wireless signal propagation, we constructed three multiple linear regression models: a weather-only model isolating meteorological predictors, a time-based model using hour of day, and a combined model incorporating both weather and temporal factors. Models were evaluated through coefficient of determination ($R^2$) comparisons and F-tests to determine if weather variables add statistically significant predictive power. Additionally, extreme weather analysis using percentile-based definitions (90th percentile for precipitation and wind speed, temperature extremes) tested whether even the most severe weather shows practically significant impacts, emphasizing the distinction between statistical significance and practical significance~\cite{sullivan2012effect}.
+
+\section{Results}
+
+Feature and Correlation analysis revealed no clear relationship between weather features and download speeds. Scatterplots of all weather variables against download speed showed no discernible patterns, and the correlation matrix confirmed that no feature had a correlation coefficient with download speed exceeding 0.1 in absolute value. While this preliminary analysis does not definitively prove that weather features are non-predictive, it strongly suggests that weather lacks the predictive potential for internet speeds that previous laboratory studies might imply.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.475\textwidth]{BWweather_scatterplots.png}
+    \caption{Scatterplot of Download Speed against Weather Features}
+    \label{fig:weather_scatterplots}
+\end{figure}
+
+In model comparison, the weather-only model achieved statistical significance ($F = 39.16$, $p < 0.001$) but explained only 0.9\% of download speed variance ($R^2 = 0.009$). Although temperature and wind speed were statistically significant predictors, their practical effects were negligible: a 10\textdegree C temperature change would affect download speed by merely 6.8 Mbps, approximately 3\% of average national internet speeds~\cite{highspeedinternet2024fastest}. The time-based model performed even worse, explaining only 0.522\% of variance despite statistical significance, with hour of day producing less than 20 Mbps total variation across a 24-hour period. The combined model incorporating both weather and temporal variables achieved $R^2 = 0.014$ (1.4\%) on training data and $R^2 = 0.015$ (1.5\%) on test data, demonstrating that 98.5\% of internet speed variation is explained by factors other than weather or time of day.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.475\textwidth]{BWactual_vs_predicted_combined.png}
+    \caption{Actual vs Predicted for Combined Model}
+    \label{fig:combined_avp}
+\end{figure}
+
+Analysis of extreme weather conditions (90th percentile) revealed minimal impacts on download speeds. Welch's t-test for heavy precipitation versus normal precipitation yielded no significant difference ($p = 0.43$, Cohen's $d = 0.019$), with precipitation explaining only 0.03\% of download speed variance. High wind speed analysis showed statistically significant differences ($p < 0.001$) with faster speeds during high winds (193.7 Mbps) compared to normal conditions (185 Mbps), but Cohen's $d = 0.113$ indicated only a 0.11 standard deviation difference, demonstrating minimal practical significance. Wind speed accounted for just 1\% of download speed variance. The counterintuitive finding that high winds correlate with faster speeds suggests confounding variables rather than causal weather effects.
+
+For the analysis of extreme temperature, one-way ANOVA revealed statistically significant differences in download speeds across temperature categories ($p < 0.001$), with extremely cold temperatures showing the fastest speeds, followed by normal temperatures, then extremely hot temperatures. Tukey HSD post-hoc tests showed a 22.8 Mbps total difference between extreme cold and hot conditions. However, eta-squared analysis ($\eta^2 = 0.0045$) demonstrated that temperature extremes explained only 0.45\% of download speed variance, leaving 99.55\% attributable to other factors. The observed pattern likely reflects confounding variables such as seasonal network usage patterns or equipment thermal effects rather than atmospheric signal interference, reinforcing the critical distinction between statistical significance (easily achieved with large samples) and practical significance (actual predictive value for operational decisions).
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.475\textwidth]{BWboxplot_temperature.png}
+    \caption{Boxplot for Extreme Temperature Conditions}
+    \label{fig:boxplot}
+\end{figure}
+
+\section{Conclusion}
+
+Weather variables explained only 0.9\% of download speed variation ($R^2=0.009$), while combined temporal and meteorological models achieved just 1.5\% ($R^2=0.015$), demonstrating that 98.5\% of download speed variation stems from other sources. Extreme weather analysis revealed negligible effects: heavy precipitation showed no significant impact ($p=0.43$, Cohen's $d=0.019$), wind speed accounted for only 1\% of variance, and temperature explained only 0.45\% of variance ($\eta^2 = 0.0045$). These findings demonstrate that statistical significance does not imply practical importance and challenge assumptions about weather-related connectivity issues in Northern Virginia. Infrastructure quality, network congestion, and ISP capacity limitations are far more important than local weather conditions, suggesting that for communities seeking improved connectivity, investment should focus on infrastructure quality and network capacity rather than weather concerns.
+
+\bibliographystyle{IEEEtran}
+\bibliography{capstone_sources}
+
+\end{document}
